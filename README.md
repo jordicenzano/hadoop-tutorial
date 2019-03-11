@@ -85,7 +85,7 @@ We can take a look to the output file doing:
 ```
 
 ### Clean up
-Stop the docker containers by doing
+Stop the docker containers by doing:
 ```
 docker-compose down
 ```
