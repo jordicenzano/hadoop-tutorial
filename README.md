@@ -5,11 +5,19 @@ This set up is totally NOT recommended for production workloads.
 Note: As I mentioned in [References](#References) this work is based in the containers build by [Big Data Europe](https://github.com/big-data-europe)
 
 ## Set up Hadhoop locally (isolated)
-Because our purpose is just to experiment, to accelerate the set up we could use a docker images, so the first step is to pull the docker images and create the cluster based on those images.
-To do that we'll execute the following command from the root of this project(*):
+Because our purpose is just to experiment, to accelerate the set up we could use a docker images (to be accurate, docker-compose).
+First of all we need to clone this repo:
+```
+git clone git@github.com:jordicenzano/hadoop-tutorial.git
+cd hadoop-tutorial
+```
+
+The first step is to pull the docker images and start the cluster based on those images.
+To do that we'll execute the following command **from the root of this project**(*):
 ```
 docker-compose up 
 ```
+Remember the 1st time you will call that it will take a while because it needs to download the docker images.
 (*) We are assuming that you have docker installed and configured, if not take a look to this [guide](https://docs.docker.com/install/overview/)
 
 ## Getting some data to analyze
@@ -24,17 +32,13 @@ In our example we'll be analyzing the following file [1647211.csv](./data/164721
 ```
 That file contains the climatological data from a weather station in hourly basis for all 2018.
 
-## Analyzing data
-The first step to use mapreduce to analyze some data is to put the data file inside Hadoop (in HDFS), to do that first will execute the Hadhoop container:
-```
-docker-compose up
-```
 ### Preparing input and output
-Let's open a shell in `resourcemanager`, we have a share volume with the host in this container
+The first step to use mapreduce to analyze some data is to put the data file inside Hadoop (in HDFS).
+Let's open a shell in `resourcemanager`, we have a share volume with the host in this container:
 ```
 docker-compose exec resourcemanager bash
 ```
-Now from that shell we will add the file to HDFS:
+Now from that shell we will add the data file to HDFS:
 ```
 # hdfs dfs -mkdir /input
 # hdfs dfs -put ./hadoop/host_shared/data/1647211.csv /input/example-temperature.csv
@@ -63,7 +67,7 @@ hadoop jar hadoop/host_shared/mapreduce/jar/WarmDays.jar hadoop.WarmDays input/e
 ### Checking the output
 We can take a look to the output file doing:
 ```
-hdfs dfs -cat /output/part-00000
+# hdfs dfs -cat /output/part-00000
 ```
 ```
 ...
